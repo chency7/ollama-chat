@@ -90,7 +90,7 @@ export default function ChatBottombar({
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleKeyPress}
-            placeholder="输入消息或按 / 使用提示词..."
+            placeholder="请在此输入消息或者提示词..."
             className="min-h-[24px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
           />
           <div className="absolute right-0 top-4 sm:right-4">

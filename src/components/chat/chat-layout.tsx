@@ -1,20 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
-import { Message, useChat } from "ai/react";
 import Chat, { ChatProps } from "./chat";
-import ChatList from "./chat-list";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 interface ChatLayoutProps {
-  defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
 }
@@ -22,7 +13,6 @@ interface ChatLayoutProps {
 type MergedProps = ChatLayoutProps & ChatProps;
 
 export function ChatLayout({
-  defaultLayout = [25, 75],
   defaultCollapsed = false,
   navCollapsedSize,
   initialMessages,
@@ -49,37 +39,13 @@ export function ChatLayout({
   }, []);
 
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      onLayout={(sizes: number[]) => {
-        document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-          sizes
-        )}`;
-      }}
-      className="h-screen items-stretch"
-    >
-      <ResizablePanel
-        defaultSize={defaultLayout[0]}
-        collapsedSize={navCollapsedSize}
-        collapsible={true}
-        minSize={15}
-        maxSize={40}
-        onCollapse={() => {
-          setIsCollapsed(true);
-          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-            true
-          )}`;
-        }}
-        onExpand={() => {
-          setIsCollapsed(false);
-          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-            false
-          )}`;
-        }}
+    <div className="flex w-full h-screen">
+      {/* 侧边栏 */}
+      <div
         className={cn(
-          isCollapsed
-            ? "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
-            : "hidden md:block"
+          "hidden md:block border-r",
+          isCollapsed ? "w-[70px]" : "w-[280px]",
+          "transition-all duration-300 ease-in-out"
         )}
       >
         <Sidebar
@@ -88,16 +54,12 @@ export function ChatLayout({
           isMobile={isMobile}
           chatId={id}
         />
-      </ResizablePanel>
-      <ResizableHandle className={cn("hidden md:flex")} withHandle />
-      <ResizablePanel
-        className="h-full w-full flex justify-center"
-        defaultSize={defaultLayout[1]}
-        minSize={60}
-        maxSize={85}
-      >
+      </div>
+
+      {/* 主内容区 */}
+      <div className="flex-1 h-full flex justify-center items-center">
         <Chat id={id} initialMessages={initialMessages} isMobile={isMobile} />
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      </div>
+    </div>
   );
 }
